@@ -1,489 +1,498 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f7f7f5">
-  <title>Waschmachine Graue Gasse 12</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waschmaschine Graue Gasse 12</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    :root {
-      --bg: #f7f7f5;
-      --text: #171717;
-      --muted: #6b6b6b;
-      --card: #ffffff;
-      --border: #deded8;
-      --free: #18794e;
-      --busy: #c93535;
-      --button: #171717;
-      --button-text: #ffffff;
-      --selected: #171717;
+    * {
+      box-sizing: border-box;
     }
 
-```
-* { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  justify-content: center;
-}
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-main {
-  width: min(100%, 560px);
-  padding: 28px 18px 40px;
-}
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
-.machine {
-  text-align: center;
-  margin: 8px 0 26px;
-}
+    .header .icon {
+      font-size: 50px;
+    }
 
-.machine-icon {
-  font-size: 42px;
-  line-height: 1;
-  margin-bottom: 18px;
-}
+    .header h1 {
+      margin: 8px 0 5px;
+      font-size: 28px;
+    }
 
-.status {
-  font-size: clamp(44px, 13vw, 76px);
-  line-height: .95;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  margin: 0;
-}
+    .header p {
+      margin: 0;
+      color: #666;
+    }
 
-.status.free { color: var(--free); }
-.status.busy { color: var(--busy); }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
 
-.substatus {
-  margin: 18px 0 0;
-  color: var(--muted);
-  font-size: 18px;
-}
+    .status {
+      text-align: center;
+      font-size: 38px;
+      font-weight: bold;
+      margin: 10px 0 20px;
+    }
 
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 22px;
-  margin-top: 22px;
-  box-shadow: 0 4px 18px rgba(0,0,0,.04);
-}
+    .free {
+      color: #218739;
+    }
 
-.details {
-  display: grid;
-  gap: 14px;
-  margin-bottom: 20px;
-}
+    .busy {
+      color: #c62828;
+    }
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  font-size: 17px;
-}
+    .info {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 17px;
+      line-height: 1.6;
+    }
 
-.label { color: var(--muted); }
-.value { font-weight: 700; text-align: right; }
+    .countdown {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      margin: 15px 0 25px;
+    }
 
-.countdown {
-  text-align: center;
-  font-size: 30px;
-  font-weight: 800;
-  margin: 4px 0 20px;
-}
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 17px;
+      cursor: pointer;
+      background: #222;
+      color: white;
+    }
 
-button {
-  width: 100%;
-  border: 0;
-  border-radius: 14px;
-  padding: 17px 18px;
-  font: inherit;
-  font-weight: 750;
-  font-size: 17px;
-  cursor: pointer;
-  background: var(--button);
-  color: var(--button-text);
-  margin-top: 10px;
-}
+    button:hover {
+      opacity: 0.9;
+    }
 
-button.secondary {
-  background: #eeeeea;
-  color: var(--text);
-}
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-button.danger {
-  background: var(--busy);
-}
+    .finish-button {
+      background: #c62828;
+    }
 
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
 
-.form-title {
-  font-size: 23px;
-  font-weight: 800;
-  margin: 0 0 18px;
-}
+    .tab {
+      width: auto;
+      padding: 8px 14px;
+      font-size: 14px;
+      border-radius: 8px;
+      background: #e5e5e5;
+      color: #444;
+    }
 
-/* ----------------------------------------------------------
-   Tabs
----------------------------------------------------------- */
+    .tab.active {
+      background: #222;
+      color: white;
+    }
 
-.tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-  background: #eeeeea;
-  border-radius: 13px;
-  padding: 5px;
-  margin-bottom: 22px;
-}
+    .tab-content {
+      display: none;
+    }
 
-.tab {
-  margin: 0;
-  padding: 12px 8px;
-  border-radius: 9px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 15px;
-}
+    .tab-content.active {
+      display: block;
+    }
 
-.tab.active {
-  background: white;
-  color: var(--text);
-  box-shadow: 0 1px 4px rgba(0,0,0,.08);
-}
+    .duration-options {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
 
-/* ----------------------------------------------------------
-   Duration options
----------------------------------------------------------- */
+    .duration-option {
+      flex: 1;
+      padding: 12px 5px;
+      background: #e5e5e5;
+      color: #222;
+      border-radius: 9px;
+      font-size: 16px;
+    }
 
-.duration-label {
-  display: block;
-  font-weight: 650;
-  margin: 0 0 10px;
-}
+    .duration-option.active {
+      background: #222;
+      color: white;
+    }
 
-.duration-options {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 9px;
-}
+    .custom-duration {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
 
-.duration-option {
-  margin: 0;
-  padding: 15px 8px;
-  background: #eeeeea;
-  color: var(--text);
-  border: 2px solid transparent;
-  border-radius: 13px;
-  font-size: 18px;
-  font-weight: 750;
-}
+    .custom-duration input {
+      flex: 1;
+      margin-bottom: 0;
+    }
 
-.duration-option.selected {
-  background: var(--selected);
-  color: white;
-  border-color: var(--selected);
-}
+    .custom-duration span {
+      white-space: nowrap;
+      color: #555;
+    }
 
-.duration-preview {
-  margin-top: 18px;
-  padding: 14px;
-  border-radius: 12px;
-  background: #f3f3ef;
-  text-align: center;
-  font-size: 15px;
-  line-height: 1.5;
-}
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
 
-.duration-preview strong {
-  font-size: 18px;
-}
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
 
-label {
-  display: block;
-  font-weight: 650;
-  margin: 15px 0 7px;
-}
+    .preview {
+      background: #f1f1f1;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 15px;
+      color: #444;
+      line-height: 1.5;
+    }
 
-input[type="datetime-local"] {
-  width: 100%;
-  border: 1px solid #cfcfc9;
-  border-radius: 12px;
-  padding: 14px;
-  font: inherit;
-  font-size: 17px;
-  background: white;
-}
+    .error {
+      color: #c62828;
+      text-align: center;
+      margin-top: 12px;
+      font-weight: bold;
+    }
 
-.hint {
-  color: var(--muted);
-  font-size: 14px;
-  margin-top: 7px;
-  line-height: 1.4;
-}
-
-.error {
-  color: #a61b1b;
-  background: #fff0f0;
-  border: 1px solid #f0caca;
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-top: 15px;
-  display: none;
-}
-
-.success {
-  color: #17633f;
-  background: #edf8f2;
-  border: 1px solid #c7e8d5;
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-top: 15px;
-  display: none;
-}
-
-.footer {
-  text-align: center;
-  color: #888;
-  font-size: 12px;
-  margin-top: 25px;
-}
-
-.hidden { display: none !important; }
-```
-
+    .loading {
+      text-align: center;
+      color: #666;
+    }
   </style>
 </head>
 
 <body>
-<main>
-  <section class="machine">
-    <div class="machine-icon">🧺</div>
-    <h1 id="status" class="status">LOADING</h1>
-    <p id="substatus" class="substatus">Checking the washing machine…</p>
-  </section>
 
-  <section id="busyCard" class="card hidden">
-    <div class="details">
-      <div class="row">
-        <span class="label">Anfang</span>
-        <span id="startTime" class="value">—</span>
-      </div>
-      <div class="row">
-        <span class="label">Ende</span>
-        <span id="endTime" class="value">—</span>
-      </div>
-    </div>
+<div class="container">
 
-```
-<div id="countdown" class="countdown">—</div>
-
-<button id="finishButton" class="danger">
-  Ich bin fertig - Waschmachine ist frei
-</button>
-```
-
-  </section>
-
-  <section id="freeCard" class="card hidden">
-    <h2 class="form-title">Waschgang starten / Start washing</h2>
-
-```
-<div class="tabs">
-  <button id="durationTab" class="tab active">Dauer / Duration</button>
-  <button id="timesTab" class="tab">Start / Ende</button>
-</div>
-
-<!-- Duration mode: default -->
-<div id="durationMode">
-  <span class="duration-label">Waschdauer / Duration</span>
-
-  <div class="duration-options">
-    <button class="duration-option" data-duration="40">40 min</button>
-    <button class="duration-option selected" data-duration="60">60 min</button>
-    <button class="duration-option" data-duration="90">90 min</button>
+  <div class="header">
+    <div class="icon">🧺</div>
+    <h1>Waschmaschine Graue Gasse 12</h1>
+    <p>Washing machine status</p>
   </div>
 
-  <div id="durationPreview" class="duration-preview">
-    Starts now<br>
-    <strong id="durationEndPreview">—</strong>
+  <div id="app" class="card">
+    <div class="loading">LOADING<br>Checking the washing machine...</div>
   </div>
+
 </div>
-
-<!-- Start/end mode -->
-<div id="timesMode" class="hidden">
-  <label for="startInput">Startzeit / Start time</label>
-  <input id="startInput" type="datetime-local">
-
-  <label for="endInput">Endzeitpunkt / Finish time</label>
-  <input id="endInput" type="datetime-local">
-</div>
-
-<button id="startButton">
-  Waschen beginnen - Start washing
-</button>
-
-<div id="error" class="error"></div>
-<div id="success" class="success"></div>
-```
-
-  </section>
-
-  <div class="footer">
-    Waschmaschinenstatus / Washing machine status
-  </div>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-  // ============================================================
-  // SUPABASE
-  // ============================================================
-
   const SUPABASE_URL = "https://qhqpclogoqrjugqzoubc.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ogf6g9WUClTrW06kaEX_Uw_smD5Dr3u";
 
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
+  const app = document.getElementById("app");
 
-  // ============================================================
-  // ELEMENTS
-  // ============================================================
-
-  const statusEl = document.getElementById("status");
-  const substatusEl = document.getElementById("substatus");
-
-  const busyCard = document.getElementById("busyCard");
-  const freeCard = document.getElementById("freeCard");
-
-  const startTimeEl = document.getElementById("startTime");
-  const endTimeEl = document.getElementById("endTime");
-  const countdownEl = document.getElementById("countdown");
-
-  const startInput = document.getElementById("startInput");
-  const endInput = document.getElementById("endInput");
-
-  const startButton = document.getElementById("startButton");
-  const finishButton = document.getElementById("finishButton");
-
-  const durationTab = document.getElementById("durationTab");
-  const timesTab = document.getElementById("timesTab");
-
-  const durationMode = document.getElementById("durationMode");
-  const timesMode = document.getElementById("timesMode");
-
-  const durationPreview = document.getElementById("durationPreview");
-  const durationEndPreview = document.getElementById("durationEndPreview");
-
-  const durationOptions = document.querySelectorAll(".duration-option");
-
-  const errorEl = document.getElementById("error");
-  const successEl = document.getElementById("success");
-
-
-  // ============================================================
-  // STATE
-  // ============================================================
-
-  let currentMachine = null;
-  let countdownTimer = null;
-  let refreshTimer = null;
-
-  // Duration mode is the default.
   let selectedDuration = 60;
-  let inputMode = "duration";
+  let customDuration = false;
+  let countdownInterval = null;
 
-
-  // ============================================================
-  // MESSAGES
-  // ============================================================
-
-  function showError(message) {
-    errorEl.textContent = message;
-    errorEl.style.display = "block";
-    successEl.style.display = "none";
-  }
-
-  function showSuccess(message) {
-    successEl.textContent = message;
-    successEl.style.display = "block";
-    errorEl.style.display = "none";
-  }
-
-  function clearMessages() {
-    errorEl.style.display = "none";
-    successEl.style.display = "none";
-  }
-
-
-  // ============================================================
-  // DATE / TIME HELPERS
-  // ============================================================
-
-  function pad(n) {
-    return String(n).padStart(2, "0");
-  }
-
-  // Value suitable for <input type="datetime-local">
-  function toLocalInputValue(date) {
-    return [
-      date.getFullYear(),
-      "-",
-      pad(date.getMonth() + 1),
-      "-",
-      pad(date.getDate()),
-      "T",
-      pad(date.getHours()),
-      ":",
-      pad(date.getMinutes())
-    ].join("");
-  }
-
-  function formatDate(iso) {
-    return new Intl.DateTimeFormat(undefined, {
-      weekday: "short",
+  function formatDate(date) {
+    return date.toLocaleString("de-CH", {
+      day: "2-digit",
+      month: "2-digit",
       hour: "2-digit",
       minute: "2-digit"
-    }).format(new Date(iso));
+    });
   }
 
-  function formatPreviewDate(date) {
-    return new Intl.DateTimeFormat(undefined, {
-      weekday: "short",
-      hour: "2-digit",
-      minute: "2-digit"
-    }).format(date);
-  }
-
-  function formatRemaining(ms) {
-    if (ms <= 0) return "Abschließen…";
-
-    const totalMinutes = Math.ceil(ms / 60000);
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    if (hours > 0) {
-      return `${hours}h ${minutes}min übrig`;
+  function formatCountdown(milliseconds) {
+    if (milliseconds <= 0) {
+      return "00:00:00";
     }
 
-    return `${minutes} min übrig`;
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return [
+      String(hours).padStart(2, "0"),
+      String(minutes).padStart(2, "0"),
+      String(seconds).padStart(2, "0")
+    ].join(":");
   }
 
+  async function loadMachine() {
+    try {
+      const { data, error } = await db.rpc("get_machine_status");
 
-  // ============================================================
-  // DURATION MODE
-  // ============================================================
+      if (error) throw error;
+
+      const machine = data[0];
+
+      if (
+        machine &&
+        machine.end_time &&
+        new Date(machine.end_time).getTime() > Date.now()
+      ) {
+        showBusy(machine);
+      } else {
+        showFree();
+      }
+
+    } catch (error) {
+      console.error(error);
+
+      app.innerHTML = `
+        <div class="error">
+          Could not load the washing machine status.<br>
+          Please try again.
+        </div>
+      `;
+    }
+  }
+
+  function showBusy(machine) {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+    }
+
+    const start = new Date(machine.start_time);
+    const end = new Date(machine.end_time);
+
+    app.innerHTML = `
+      <div class="status busy">
+        BUSY<br>
+        <span style="font-size:22px;">BELEGT</span>
+      </div>
+
+      <div class="info">
+        <strong>Anfang / Start</strong><br>
+        ${formatDate(start)}
+        <br><br>
+
+        <strong>Ende / Finish</strong><br>
+        ${formatDate(end)}
+      </div>
+
+      <div class="countdown" id="countdown">
+        ${formatCountdown(end - Date.now())}
+      </div>
+
+      <button class="finish-button" id="finishButton">
+        Ich bin fertig – Waschmaschine ist frei<br>
+        I'm done – washing machine is free
+      </button>
+    `;
+
+    document.getElementById("finishButton").addEventListener("click", finishWash);
+
+    countdownInterval = setInterval(() => {
+      const remaining = end.getTime() - Date.now();
+
+      if (remaining <= 0) {
+        clearInterval(countdownInterval);
+        loadMachine();
+      } else {
+        const countdown = document.getElementById("countdown");
+        if (countdown) {
+          countdown.textContent = formatCountdown(remaining);
+        }
+      }
+    }, 1000);
+  }
+
+  function showFree() {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+
+    app.innerHTML = `
+      <div class="status free">
+        FREE<br>
+        <span style="font-size:22px;">FREI</span>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" id="durationTab">
+          Duration
+        </button>
+
+        <button class="tab" id="exactTab">
+          Start & End
+        </button>
+      </div>
+
+      <div id="durationContent" class="tab-content active">
+
+        <div class="duration-options">
+          <button class="duration-option" data-duration="40">40 min</button>
+          <button class="duration-option active" data-duration="60">60 min</button>
+          <button class="duration-option" data-duration="90">90 min</button>
+        </div>
+
+        <div class="custom-duration">
+          <input
+            type="number"
+            id="customMinutes"
+            min="1"
+            max="1440"
+            placeholder="Custom"
+          >
+          <span>minutes</span>
+        </div>
+
+        <div class="preview" id="durationPreview">
+          Starts now / Jetzt starten<br>
+          <strong id="durationEndPreview"></strong>
+        </div>
+
+        <button id="startDurationButton">
+          Waschen beginnen – Start washing
+        </button>
+
+      </div>
+
+      <div id="exactContent" class="tab-content">
+
+        <label for="startTime">
+          Start / Anfang
+        </label>
+
+        <input type="datetime-local" id="startTime">
+
+        <label for="endTime">
+          End / Ende
+        </label>
+
+        <input type="datetime-local" id="endTime">
+
+        <button id="startExactButton">
+          Waschen beginnen – Start washing
+        </button>
+
+      </div>
+
+      <div id="errorMessage" class="error"></div>
+    `;
+
+    setupFreeControls();
+    updateDurationPreview();
+  }
+
+  function setupFreeControls() {
+    const durationTab = document.getElementById("durationTab");
+    const exactTab = document.getElementById("exactTab");
+
+    const durationContent = document.getElementById("durationContent");
+    const exactContent = document.getElementById("exactContent");
+
+    durationTab.addEventListener("click", () => {
+      durationTab.classList.add("active");
+      exactTab.classList.remove("active");
+
+      durationContent.classList.add("active");
+      exactContent.classList.remove("active");
+    });
+
+    exactTab.addEventListener("click", () => {
+      exactTab.classList.add("active");
+      durationTab.classList.remove("active");
+
+      exactContent.classList.add("active");
+      durationContent.classList.remove("active");
+
+      setDefaultExactTimes();
+    });
+
+    document.querySelectorAll(".duration-option").forEach(button => {
+      button.addEventListener("click", () => {
+        selectedDuration = Number(button.dataset.duration);
+        customDuration = false;
+
+        document.querySelectorAll(".duration-option").forEach(b => {
+          b.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        document.getElementById("customMinutes").value = "";
+
+        updateDurationPreview();
+      });
+    });
+
+    document.getElementById("customMinutes").addEventListener("input", () => {
+      const value = Number(document.getElementById("customMinutes").value);
+
+      if (value > 0) {
+        customDuration = true;
+
+        document.querySelectorAll(".duration-option").forEach(b => {
+          b.classList.remove("active");
+        });
+
+        selectedDuration = value;
+      } else {
+        customDuration = false;
+        selectedDuration = 60;
+
+        document.querySelector('[data-duration="60"]').classList.add("active");
+      }
+
+      updateDurationPreview();
+    });
+
+    document.getElementById("startDurationButton")
+      .addEventListener("click", startDurationWash);
+
+    document.getElementById("startExactButton")
+      .addEventListener("click", startExactWash);
+  }
 
   function updateDurationPreview() {
     const now = new Date();
@@ -491,361 +500,151 @@ input[type="datetime-local"] {
       now.getTime() + selectedDuration * 60 * 1000
     );
 
-    durationEndPreview.textContent =
-      `${formatPreviewDate(end)} (${selectedDuration} min)`;
+    document.getElementById("durationEndPreview").textContent =
+      `Ends / Ende: ${formatDate(end)} (${selectedDuration} min)`;
   }
 
-  durationOptions.forEach(button => {
-    button.addEventListener("click", () => {
-      selectedDuration = Number(button.dataset.duration);
-
-      durationOptions.forEach(option => {
-        option.classList.remove("selected");
-      });
-
-      button.classList.add("selected");
-
-      updateDurationPreview();
-      clearMessages();
-    });
-  });
-
-
-  // ============================================================
-  // TABS
-  // ============================================================
-
-  durationTab.addEventListener("click", () => {
-    inputMode = "duration";
-
-    durationTab.classList.add("active");
-    timesTab.classList.remove("active");
-
-    durationMode.classList.remove("hidden");
-    timesMode.classList.add("hidden");
-
-    updateDurationPreview();
-    clearMessages();
-  });
-
-  timesTab.addEventListener("click", () => {
-    inputMode = "times";
-
-    timesTab.classList.add("active");
-    durationTab.classList.remove("active");
-
-    timesMode.classList.remove("hidden");
-    durationMode.classList.add("hidden");
-
-    setDefaultTimes();
-    clearMessages();
-  });
-
-
-  // ============================================================
-  // START / END DEFAULTS
-  // ============================================================
-
-  function setDefaultTimes() {
+  function setDefaultExactTimes() {
     const now = new Date();
+    const end = new Date(now.getTime() + 60 * 60 * 1000);
+
+    document.getElementById("startTime").value =
+      toDatetimeLocal(now);
+
+    document.getElementById("endTime").value =
+      toDatetimeLocal(end);
+  }
+
+  function toDatetimeLocal(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+  async function startDurationWash() {
+    const errorMessage = document.getElementById("errorMessage");
+    errorMessage.textContent = "";
+
+    const minutes = Number(
+      customDuration
+        ? document.getElementById("customMinutes").value
+        : selectedDuration
+    );
+
+    if (!minutes || minutes <= 0 || minutes > 1440) {
+      errorMessage.textContent =
+        "Please enter a duration between 1 and 1440 minutes.";
+      return;
+    }
+
+    const start = new Date();
     const end = new Date(
-      now.getTime() + 60 * 60 * 1000
+      start.getTime() + minutes * 60 * 1000
     );
 
-    startInput.value = toLocalInputValue(now);
-    endInput.value = toLocalInputValue(end);
+    await saveWash(start, end);
   }
 
+  async function startExactWash() {
+    const errorMessage = document.getElementById("errorMessage");
+    errorMessage.textContent = "";
 
-  // ============================================================
-  // LOAD MACHINE
-  // ============================================================
+    const startValue = document.getElementById("startTime").value;
+    const endValue = document.getElementById("endTime").value;
 
-  async function loadMachine() {
-    const { data, error } = await db.rpc("get_machine_status");
-
-    if (error) {
-      statusEl.textContent = "ERROR";
-      statusEl.className = "status busy";
-
-      substatusEl.textContent =
-        "Could not connect to the washing machine database.";
-
-      freeCard.classList.add("hidden");
-      busyCard.classList.add("hidden");
-
-      console.error(error);
+    if (!startValue || !endValue) {
+      errorMessage.textContent =
+        "Please enter both start and finish times.";
       return;
     }
 
-    currentMachine = data && data.length ? data[0] : null;
+    const start = new Date(startValue);
+    const end = new Date(endValue);
 
-    renderMachine();
+    await saveWash(start, end);
   }
 
-
-  // ============================================================
-  // RENDER MACHINE STATUS
-  // ============================================================
-
-  function renderMachine() {
-    if (countdownTimer) {
-      clearInterval(countdownTimer);
-      countdownTimer = null;
-    }
-
-    const active =
-      currentMachine &&
-      currentMachine.end_time &&
-      new Date(currentMachine.end_time) > new Date();
-
-    if (!active) {
-      statusEl.textContent = "FREI / FREE";
-      statusEl.className = "status free";
-
-      substatusEl.textContent =
-        "Die Waschmaschine ist verfügbar.";
-
-      busyCard.classList.add("hidden");
-      freeCard.classList.remove("hidden");
-
-      updateDurationPreview();
-
-      return;
-    }
-
-    statusEl.textContent = "BESETZT / OCCUPIED";
-    statusEl.className = "status busy";
-
-    substatusEl.textContent =
-      "Jemand benutzt die Waschmaschine.";
-
-    busyCard.classList.remove("hidden");
-    freeCard.classList.add("hidden");
-
-    startTimeEl.textContent =
-      formatDate(currentMachine.start_time);
-
-    endTimeEl.textContent =
-      formatDate(currentMachine.end_time);
-
-    updateCountdown();
-
-    countdownTimer = setInterval(
-      updateCountdown,
-      1000
-    );
-  }
-
-
-  // ============================================================
-  // COUNTDOWN
-  // ============================================================
-
-  function updateCountdown() {
-    if (!currentMachine) return;
-
-    const remaining =
-      new Date(currentMachine.end_time).getTime() -
-      Date.now();
-
-    if (remaining <= 0) {
-      countdownEl.textContent = "Finished";
-
-      clearInterval(countdownTimer);
-
-      // Re-check the database so everybody sees FREE.
-      setTimeout(loadMachine, 500);
-
-      return;
-    }
-
-    countdownEl.textContent =
-      formatRemaining(remaining);
-  }
-
-
-  // ============================================================
-  // START WASH
-  // ============================================================
-
-  startButton.addEventListener("click", async () => {
-    clearMessages();
-
-    let start;
-    let end;
-
-    // ----------------------------------------------------------
-    // Duration mode
-    // ----------------------------------------------------------
-
-    if (inputMode === "duration") {
-      start = new Date();
-
-      end = new Date(
-        start.getTime() +
-        selectedDuration * 60 * 1000
-      );
-    }
-
-    // ----------------------------------------------------------
-    // Start/end mode
-    // ----------------------------------------------------------
-
-    else {
-      if (!startInput.value || !endInput.value) {
-        showError(
-          "Please enter both times."
-        );
-        return;
-      }
-
-      start = new Date(startInput.value);
-      end = new Date(endInput.value);
-    }
-
-    // ----------------------------------------------------------
-    // Validate
-    // ----------------------------------------------------------
-
-    if (
-      Number.isNaN(start.getTime()) ||
-      Number.isNaN(end.getTime())
-    ) {
-      showError(
-        "Please enter valid dates and times."
-      );
-      return;
-    }
+  async function saveWash(start, end) {
+    const errorMessage = document.getElementById("errorMessage");
 
     if (end <= start) {
-      showError(
-        "The finish time must be after the start time."
-      );
+      errorMessage.textContent =
+        "Finish time must be after start time.";
       return;
     }
 
-    const now = new Date();
-
-    // Allow a little clock skew, but don't allow old entries.
-    if (
-      start.getTime() <
-      now.getTime() - 10 * 60 * 1000
-    ) {
-      showError(
-        "The start time is too far in the past."
-      );
+    if (start < new Date(Date.now() - 10 * 60 * 1000)) {
+      errorMessage.textContent =
+        "Start time is too far in the past.";
       return;
     }
 
-    // Maximum 24 hours.
-    if (
-      end.getTime() >
-      now.getTime() + 24 * 60 * 60 * 1000
-    ) {
-      showError(
-        "A wash can be scheduled for at most 24 hours."
-      );
+    if (end > new Date(Date.now() + 24 * 60 * 60 * 1000)) {
+      errorMessage.textContent =
+        "Finish time cannot be more than 24 hours from now.";
       return;
     }
 
-    // ----------------------------------------------------------
-    // Send to Supabase
-    // ----------------------------------------------------------
+    const button = document.querySelector(
+      "#startDurationButton, #startExactButton"
+    );
 
-    startButton.disabled = true;
-    startButton.textContent = "Starting…";
+    if (button) {
+      button.disabled = true;
+    }
 
-    const { error } = await db.rpc(
-      "start_wash",
-      {
-        p_start_time: start.toISOString(),
-        p_end_time: end.toISOString()
+    const { error } = await db.rpc("start_wash", {
+      p_start_time: start.toISOString(),
+      p_end_time: end.toISOString()
+    });
+
+    if (error) {
+      console.error(error);
+
+      errorMessage.textContent =
+        error.message || "Could not start the washing machine.";
+
+      if (button) {
+        button.disabled = false;
       }
-    );
 
-    startButton.disabled = false;
-    startButton.textContent =
-      "Waschen beginnen - Start washing";
+      return;
+    }
 
-    // ----------------------------------------------------------
-    // Handle error
-    // ----------------------------------------------------------
+    loadMachine();
+  }
+
+  async function finishWash() {
+    const button = document.getElementById("finishButton");
+
+    if (button) {
+      button.disabled = true;
+    }
+
+    const { error } = await db.rpc("finish_wash");
 
     if (error) {
-      showError(
-        error.message.includes("already in use")
-          ? "Jemand hat gerade begonnen, die Maschine zu benutzen. Bitte überprüfen Sie den Status erneut."
-          : error.message
-      );
+      console.error(error);
 
-      await loadMachine();
+      if (button) {
+        button.disabled = false;
+      }
 
+      alert("Could not finish the wash. Please try again.");
       return;
     }
 
-    // ----------------------------------------------------------
-    // Success
-    // ----------------------------------------------------------
+    loadMachine();
+  }
 
-    showSuccess(
-      "Die Waschmaschine ist jetzt in Betrieb."
-    );
-
-    await loadMachine();
-  });
-
-
-  // ============================================================
-  // FINISH WASH
-  // ============================================================
-
-  finishButton.addEventListener("click", async () => {
-    if (
-      !confirm(
-        "Ist die Waschmaschine frei?\nAre you sure the washing machine is free?"
-      )
-    ) {
-      return;
-    }
-
-    finishButton.disabled = true;
-    finishButton.textContent = "Updating…";
-
-    const { error } =
-      await db.rpc("finish_wash");
-
-    finishButton.disabled = false;
-    finishButton.textContent =
-      "Ich bin fertig - Waschmachine ist frei";
-
-    if (error) {
-      showError(error.message);
-      return;
-    }
-
-    await loadMachine();
-  });
-
-
-  // ============================================================
-  // REFRESH
-  // ============================================================
-
-  // Refresh shared state every 30 seconds.
-  refreshTimer = setInterval(
-    loadMachine,
-    30000
-  );
-
-
-  // ============================================================
-  // INITIAL LOAD
-  // ============================================================
-
-  updateDurationPreview();
   loadMachine();
 
+  // Refresh status every 30 seconds
+  setInterval(loadMachine, 30000);
 </script>
 
 </body>
