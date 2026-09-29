@@ -316,6 +316,8 @@
   <div id="app" class="card">
     <div class="loading">LOADING<br>Checking the washing machine...</div>
   </div>
+  
+  <div class="last-completed" id="lastCompleted"></div>
 
 </div>
 
@@ -527,8 +529,6 @@
       </div>
 
       <div id="errorMessage" class="error"></div>
-      
-      <div class="last-completed" id="lastCompleted"></div>
     `;
     
     const lastCompleted = machine?.last_completed_at;
@@ -536,6 +536,8 @@
     if (lastCompleted) {
       document.getElementById("lastCompleted").textContent =
         `Letzte Wäsche / Last completed wash: ${formatDate(new Date(lastCompleted))}`;
+    } else {
+      document.getElementById("lastCompleted").textContent = "";
     }
 
     setupFreeControls();
