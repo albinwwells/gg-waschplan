@@ -431,7 +431,7 @@
 
       if (remaining <= 0) {
         clearInterval(countdownInterval);
-        loadMachine();
+        finishWash();
       } else {
         const countdown = document.getElementById("countdown");
         if (countdown) {
@@ -553,41 +553,6 @@
         inline: "center"
       });
     }
-  }
-
-  const customScroll = document.getElementById("customDurationScroll");
-  const customMinutes = document.querySelectorAll(".custom-minute");
-  
-  customMinutes.forEach(button => {
-    button.addEventListener("click", () => {
-      const minutes = Number(button.dataset.minutes);
-  
-      selectedDuration = minutes;
-  
-      customMinutes.forEach(b => b.classList.remove("selected"));
-      button.classList.add("selected");
-  
-      button.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-  
-      document.querySelectorAll(".duration-option").forEach(b => {
-        b.classList.remove("active");
-      });
-  
-      updateDurationPreview();
-    });
-  });
-  
-  const initialMinute = document.querySelector(
-    '.custom-minute[data-minutes="60"]'
-  );
-  
-  if (initialMinute) {
-    initialMinute.scrollIntoView({
-      block: "center"
-    });
   }
 
   function setupFreeControls() {
