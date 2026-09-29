@@ -209,23 +209,19 @@
   <section id="freeCard" class="card hidden">
     <h2 class="form-title">Start a wash</h2>
 
-    <label for="startInput">When did you start?</label>
+    <label for="startInput">Startzeit / Start time</label>
     <input id="startInput" type="datetime-local">
 
-    <label for="endInput">When will it finish?</label>
+    <label for="endInput">Endzeitpunkt / Finish time</label>
     <input id="endInput" type="datetime-local">
 
-    <div class="hint">
-      Times are shown in your phone's local time.
-    </div>
-
-    <button id="startButton">Start washing</button>
+    <button id="startButton">Waschen beginnen / Start washing</button>
 
     <div id="error" class="error"></div>
     <div id="success" class="success"></div>
   </section>
 
-  <div class="footer">Washing machine status</div>
+  <div class="footer">Waschmaschinenstatus / Washing machine status</div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -302,15 +298,15 @@
   }
 
   function formatRemaining(ms) {
-    if (ms <= 0) return "Finishing…";
+    if (ms <= 0) return "Abschließen…";
     const totalMinutes = Math.ceil(ms / 60000);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
 
     if (hours > 0) {
-      return `${hours}h ${minutes}min remaining`;
+      return `${hours}h ${minutes}min übrig`;
     }
-    return `${minutes} min remaining`;
+    return `${minutes} min übrig`;
   }
 
   function setDefaultTimes() {
@@ -347,18 +343,18 @@
                    new Date(currentMachine.end_time) > new Date();
 
     if (!active) {
-      statusEl.textContent = "FREE";
+      statusEl.textContent = "FREI / FREE";
       statusEl.className = "status free";
-      substatusEl.textContent = "The washing machine is available.";
+      substatusEl.textContent = "Die Waschmaschine ist verfügbar.";
       busyCard.classList.add("hidden");
       freeCard.classList.remove("hidden");
       setDefaultTimes();
       return;
     }
 
-    statusEl.textContent = "IN USE";
+    statusEl.textContent = "BESETZT / OCCUPIED";
     statusEl.className = "status busy";
-    substatusEl.textContent = "Someone is currently using the washing machine.";
+    substatusEl.textContent = "Jemand benutzt die Waschmaschine.";
     busyCard.classList.remove("hidden");
     freeCard.classList.add("hidden");
 
@@ -427,22 +423,22 @@
     });
 
     startButton.disabled = false;
-    startButton.textContent = "Start washing";
+    startButton.textContent = "Waschen beginnen - Start washing";
 
     if (error) {
       showError(error.message.includes("already in use")
-        ? "Someone has just started using the machine. Please check the status again."
+        ? "Jemand hat gerade begonnen, die Maschine zu benutzen. Bitte überprüfen Sie den Status erneut."
         : error.message);
       await loadMachine();
       return;
     }
 
-    showSuccess("The washing machine is now marked as in use.");
+    showSuccess("Die Waschmaschine ist jetzt frei.");
     await loadMachine();
   });
 
   finishButton.addEventListener("click", async () => {
-    if (!confirm("Are you sure the washing machine is free?")) return;
+    if (!confirm("Ist die Waschmachine frei?\nAre you sure the washing machine is free?")) return;
 
     finishButton.disabled = true;
     finishButton.textContent = "Updating…";
@@ -450,7 +446,7 @@
     const { error } = await db.rpc("finish_wash");
 
     finishButton.disabled = false;
-    finishButton.textContent = "I'm done — machine is free";
+    finishButton.textContent = "Ich bin fertig - Waschmachine ist frei";
 
     if (error) {
       showError(error.message);
