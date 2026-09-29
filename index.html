@@ -59,11 +59,11 @@
       font-weight: bold;
       margin: 10px 0 20px;
     }
-
+    
     .free {
       color: #218739;
     }
-
+    
     .busy {
       color: #c62828;
     }
@@ -280,8 +280,7 @@
 
   <div class="header">
     <div class="icon">🧺</div>
-    <h1>Waschmaschine Graue Gasse 12</h1>
-    <p>Washing machine status</p>
+    <div id="status"></div>
   </div>
 
   <div id="app" class="card">
@@ -366,11 +365,13 @@
     const start = new Date(machine.start_time);
     const end = new Date(machine.end_time);
 
-    app.innerHTML = `
+    document.getElementById("status").innerHTML = `
       <div class="status busy">
         BESETZT / OCCUPIED
       </div>
-
+    `;
+    
+    app.innerHTML = `
       <div class="info">
         <strong>Anfang / Start</strong><br>
         ${formatDate(start)}
@@ -413,11 +414,13 @@
       countdownInterval = null;
     }
 
-    app.innerHTML = `
+    document.getElementById("status").innerHTML = `
       <div class="status free">
         FREI / FREE
       </div>
+    `;
 
+    app.innerHTML = `
       <div class="tabs">
         <button class="tab active" id="durationTab">
           Dauer / Duration
