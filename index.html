@@ -256,6 +256,13 @@
         rgba(241, 241, 241, 0)
       );
     }
+    
+    .last-completed {
+      margin-top: 14px;
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+    }
 
     .preview {
       background: #f1f1f1;
@@ -365,7 +372,7 @@
       ) {
         showBusy(machine);
       } else {
-        showFree();
+        showFree(machine);
       }
 
     } catch (error) {
@@ -434,7 +441,7 @@
     }, 1000);
   }
 
-  function showFree() {
+  function showFree(machine) {
     if (countdownInterval) {
       clearInterval(countdownInterval);
       countdownInterval = null;
@@ -473,10 +480,6 @@
           </button>
         </div>
 
-        <div class="custom-picker-label">
-          Custom duration / Eigene Dauer
-        </div>
-
         <div class="custom-duration-picker">
           <div class="custom-duration-scroll" id="customDurationScroll">
             ${Array.from({ length: 180 }, (_, i) => {
@@ -493,7 +496,7 @@
         </div>
 
         <div class="preview" id="durationPreview">
-          Starts now / Jetzt starten<br>
+          Jetzt starten / Starts now<br>
           <strong id="durationEndPreview"></strong>
         </div>
 
@@ -524,7 +527,16 @@
       </div>
 
       <div id="errorMessage" class="error"></div>
+      
+      <div class="last-completed" id="lastCompleted"></div>
     `;
+    
+    const lastCompleted = machine?.last_completed_at;
+
+    if (lastCompleted) {
+      document.getElementById("lastCompleted").textContent =
+        `Letzte Wäsche / Last completed wash: ${formatDate(new Date(lastCompleted))}`;
+    }
 
     setupFreeControls();
     updateDurationPreview();
@@ -656,7 +668,7 @@
     );
 
     document.getElementById("durationEndPreview").textContent =
-      `Ends / Ende: ${formatDate(end)} (${selectedDuration} min)`;
+      `Ende / Ends: ${formatDate(end)} (${selectedDuration} min)`;
   }
 
   function setDefaultExactTimes() {
