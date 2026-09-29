@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -16,170 +17,250 @@
       --busy: #c93535;
       --button: #171717;
       --button-text: #ffffff;
+      --selected: #171717;
     }
 
-    * { box-sizing: border-box; }
+```
+* { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-    }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+}
 
-    main {
-      width: min(100%, 560px);
-      padding: 28px 18px 40px;
-    }
+main {
+  width: min(100%, 560px);
+  padding: 28px 18px 40px;
+}
 
-    .machine {
-      text-align: center;
-      margin: 8px 0 26px;
-    }
+.machine {
+  text-align: center;
+  margin: 8px 0 26px;
+}
 
-    .machine-icon {
-      font-size: 42px;
-      line-height: 1;
-      margin-bottom: 18px;
-    }
+.machine-icon {
+  font-size: 42px;
+  line-height: 1;
+  margin-bottom: 18px;
+}
 
-    .status {
-      font-size: clamp(44px, 13vw, 76px);
-      line-height: .95;
-      font-weight: 800;
-      letter-spacing: -0.05em;
-      margin: 0;
-    }
+.status {
+  font-size: clamp(44px, 13vw, 76px);
+  line-height: .95;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  margin: 0;
+}
 
-    .status.free { color: var(--free); }
-    .status.busy { color: var(--busy); }
+.status.free { color: var(--free); }
+.status.busy { color: var(--busy); }
 
-    .substatus {
-      margin: 18px 0 0;
-      color: var(--muted);
-      font-size: 18px;
-    }
+.substatus {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 18px;
+}
 
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 22px;
-      margin-top: 22px;
-      box-shadow: 0 4px 18px rgba(0,0,0,.04);
-    }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+  margin-top: 22px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.04);
+}
 
-    .details {
-      display: grid;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
+.details {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 20px;
+}
 
-    .row {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      font-size: 17px;
-    }
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 17px;
+}
 
-    .label { color: var(--muted); }
-    .value { font-weight: 700; text-align: right; }
+.label { color: var(--muted); }
+.value { font-weight: 700; text-align: right; }
 
-    .countdown {
-      text-align: center;
-      font-size: 30px;
-      font-weight: 800;
-      margin: 4px 0 20px;
-    }
+.countdown {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 800;
+  margin: 4px 0 20px;
+}
 
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 14px;
-      padding: 17px 18px;
-      font: inherit;
-      font-weight: 750;
-      font-size: 17px;
-      cursor: pointer;
-      background: var(--button);
-      color: var(--button-text);
-      margin-top: 10px;
-    }
+button {
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 17px 18px;
+  font: inherit;
+  font-weight: 750;
+  font-size: 17px;
+  cursor: pointer;
+  background: var(--button);
+  color: var(--button-text);
+  margin-top: 10px;
+}
 
-    button.secondary {
-      background: #eeeeea;
-      color: var(--text);
-    }
+button.secondary {
+  background: #eeeeea;
+  color: var(--text);
+}
 
-    button.danger {
-      background: var(--busy);
-    }
+button.danger {
+  background: var(--busy);
+}
 
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
 
-    .form-title {
-      font-size: 23px;
-      font-weight: 800;
-      margin: 0 0 18px;
-    }
+.form-title {
+  font-size: 23px;
+  font-weight: 800;
+  margin: 0 0 18px;
+}
 
-    label {
-      display: block;
-      font-weight: 650;
-      margin: 15px 0 7px;
-    }
+/* ----------------------------------------------------------
+   Tabs
+---------------------------------------------------------- */
 
-    input[type="datetime-local"] {
-      width: 100%;
-      border: 1px solid #cfcfc9;
-      border-radius: 12px;
-      padding: 14px;
-      font: inherit;
-      font-size: 17px;
-      background: white;
-    }
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  background: #eeeeea;
+  border-radius: 13px;
+  padding: 5px;
+  margin-bottom: 22px;
+}
 
-    .hint {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 7px;
-      line-height: 1.4;
-    }
+.tab {
+  margin: 0;
+  padding: 12px 8px;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+}
 
-    .error {
-      color: #a61b1b;
-      background: #fff0f0;
-      border: 1px solid #f0caca;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-top: 15px;
-      display: none;
-    }
+.tab.active {
+  background: white;
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
 
-    .success {
-      color: #17633f;
-      background: #edf8f2;
-      border: 1px solid #c7e8d5;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-top: 15px;
-      display: none;
-    }
+/* ----------------------------------------------------------
+   Duration options
+---------------------------------------------------------- */
 
-    .footer {
-      text-align: center;
-      color: #888;
-      font-size: 12px;
-      margin-top: 25px;
-    }
+.duration-label {
+  display: block;
+  font-weight: 650;
+  margin: 0 0 10px;
+}
 
-    .hidden { display: none !important; }
+.duration-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+
+.duration-option {
+  margin: 0;
+  padding: 15px 8px;
+  background: #eeeeea;
+  color: var(--text);
+  border: 2px solid transparent;
+  border-radius: 13px;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.duration-option.selected {
+  background: var(--selected);
+  color: white;
+  border-color: var(--selected);
+}
+
+.duration-preview {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f3f3ef;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.duration-preview strong {
+  font-size: 18px;
+}
+
+label {
+  display: block;
+  font-weight: 650;
+  margin: 15px 0 7px;
+}
+
+input[type="datetime-local"] {
+  width: 100%;
+  border: 1px solid #cfcfc9;
+  border-radius: 12px;
+  padding: 14px;
+  font: inherit;
+  font-size: 17px;
+  background: white;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 7px;
+  line-height: 1.4;
+}
+
+.error {
+  color: #a61b1b;
+  background: #fff0f0;
+  border: 1px solid #f0caca;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 15px;
+  display: none;
+}
+
+.success {
+  color: #17633f;
+  background: #edf8f2;
+  border: 1px solid #c7e8d5;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 15px;
+  display: none;
+}
+
+.footer {
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  margin-top: 25px;
+}
+
+.hidden { display: none !important; }
+```
+
   </style>
 </head>
 
@@ -202,56 +283,131 @@
         <span id="endTime" class="value">—</span>
       </div>
     </div>
-    <div id="countdown" class="countdown">—</div>
-    <button id="finishButton" class="danger">Ich bin fertig - Waschmachine ist frei</button>
+
+```
+<div id="countdown" class="countdown">—</div>
+
+<button id="finishButton" class="danger">
+  Ich bin fertig - Waschmachine ist frei
+</button>
+```
+
   </section>
 
   <section id="freeCard" class="card hidden">
     <h2 class="form-title">Waschgang starten / Start washing</h2>
 
-    <label for="startInput">Startzeit / Start time</label>
-    <input id="startInput" type="datetime-local">
+```
+<div class="tabs">
+  <button id="durationTab" class="tab active">Dauer / Duration</button>
+  <button id="timesTab" class="tab">Start / Ende</button>
+</div>
 
-    <label for="endInput">Endzeitpunkt / Finish time</label>
-    <input id="endInput" type="datetime-local">
+<!-- Duration mode: default -->
+<div id="durationMode">
+  <span class="duration-label">Waschdauer / Duration</span>
 
-    <button id="startButton">Waschen beginnen / Start washing</button>
+  <div class="duration-options">
+    <button class="duration-option" data-duration="40">40 min</button>
+    <button class="duration-option selected" data-duration="60">60 min</button>
+    <button class="duration-option" data-duration="90">90 min</button>
+  </div>
 
-    <div id="error" class="error"></div>
-    <div id="success" class="success"></div>
+  <div id="durationPreview" class="duration-preview">
+    Starts now<br>
+    <strong id="durationEndPreview">—</strong>
+  </div>
+</div>
+
+<!-- Start/end mode -->
+<div id="timesMode" class="hidden">
+  <label for="startInput">Startzeit / Start time</label>
+  <input id="startInput" type="datetime-local">
+
+  <label for="endInput">Endzeitpunkt / Finish time</label>
+  <input id="endInput" type="datetime-local">
+</div>
+
+<button id="startButton">
+  Waschen beginnen - Start washing
+</button>
+
+<div id="error" class="error"></div>
+<div id="success" class="success"></div>
+```
+
   </section>
 
-  <div class="footer">Waschmaschinenstatus / Washing machine status</div>
+  <div class="footer">
+    Waschmaschinenstatus / Washing machine status
+  </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
   // ============================================================
-  // PUT YOUR SUPABASE DETAILS HERE
+  // SUPABASE
   // ============================================================
+
   const SUPABASE_URL = "https://qhqpclogoqrjugqzoubc.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ogf6g9WUClTrW06kaEX_Uw_smD5Dr3u";
 
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
+
+  // ============================================================
+  // ELEMENTS
+  // ============================================================
+
   const statusEl = document.getElementById("status");
   const substatusEl = document.getElementById("substatus");
+
   const busyCard = document.getElementById("busyCard");
   const freeCard = document.getElementById("freeCard");
+
   const startTimeEl = document.getElementById("startTime");
   const endTimeEl = document.getElementById("endTime");
   const countdownEl = document.getElementById("countdown");
+
   const startInput = document.getElementById("startInput");
   const endInput = document.getElementById("endInput");
+
   const startButton = document.getElementById("startButton");
   const finishButton = document.getElementById("finishButton");
+
+  const durationTab = document.getElementById("durationTab");
+  const timesTab = document.getElementById("timesTab");
+
+  const durationMode = document.getElementById("durationMode");
+  const timesMode = document.getElementById("timesMode");
+
+  const durationPreview = document.getElementById("durationPreview");
+  const durationEndPreview = document.getElementById("durationEndPreview");
+
+  const durationOptions = document.querySelectorAll(".duration-option");
+
   const errorEl = document.getElementById("error");
   const successEl = document.getElementById("success");
+
+
+  // ============================================================
+  // STATE
+  // ============================================================
 
   let currentMachine = null;
   let countdownTimer = null;
   let refreshTimer = null;
+
+  // Duration mode is the default.
+  let selectedDuration = 60;
+  let inputMode = "duration";
+
+
+  // ============================================================
+  // MESSAGES
+  // ============================================================
 
   function showError(message) {
     errorEl.textContent = message;
@@ -269,6 +425,11 @@
     errorEl.style.display = "none";
     successEl.style.display = "none";
   }
+
+
+  // ============================================================
+  // DATE / TIME HELPERS
+  // ============================================================
 
   function pad(n) {
     return String(n).padStart(2, "0");
@@ -297,8 +458,17 @@
     }).format(new Date(iso));
   }
 
+  function formatPreviewDate(date) {
+    return new Intl.DateTimeFormat(undefined, {
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(date);
+  }
+
   function formatRemaining(ms) {
     if (ms <= 0) return "Abschließen…";
+
     const totalMinutes = Math.ceil(ms / 60000);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
@@ -306,15 +476,90 @@
     if (hours > 0) {
       return `${hours}h ${minutes}min übrig`;
     }
+
     return `${minutes} min übrig`;
   }
 
+
+  // ============================================================
+  // DURATION MODE
+  // ============================================================
+
+  function updateDurationPreview() {
+    const now = new Date();
+    const end = new Date(
+      now.getTime() + selectedDuration * 60 * 1000
+    );
+
+    durationEndPreview.textContent =
+      `${formatPreviewDate(end)} (${selectedDuration} min)`;
+  }
+
+  durationOptions.forEach(button => {
+    button.addEventListener("click", () => {
+      selectedDuration = Number(button.dataset.duration);
+
+      durationOptions.forEach(option => {
+        option.classList.remove("selected");
+      });
+
+      button.classList.add("selected");
+
+      updateDurationPreview();
+      clearMessages();
+    });
+  });
+
+
+  // ============================================================
+  // TABS
+  // ============================================================
+
+  durationTab.addEventListener("click", () => {
+    inputMode = "duration";
+
+    durationTab.classList.add("active");
+    timesTab.classList.remove("active");
+
+    durationMode.classList.remove("hidden");
+    timesMode.classList.add("hidden");
+
+    updateDurationPreview();
+    clearMessages();
+  });
+
+  timesTab.addEventListener("click", () => {
+    inputMode = "times";
+
+    timesTab.classList.add("active");
+    durationTab.classList.remove("active");
+
+    timesMode.classList.remove("hidden");
+    durationMode.classList.add("hidden");
+
+    setDefaultTimes();
+    clearMessages();
+  });
+
+
+  // ============================================================
+  // START / END DEFAULTS
+  // ============================================================
+
   function setDefaultTimes() {
     const now = new Date();
-    const end = new Date(now.getTime() + 60 * 60 * 1000);
+    const end = new Date(
+      now.getTime() + 60 * 60 * 1000
+    );
+
     startInput.value = toLocalInputValue(now);
     endInput.value = toLocalInputValue(end);
   }
+
+
+  // ============================================================
+  // LOAD MACHINE
+  // ============================================================
 
   async function loadMachine() {
     const { data, error } = await db.rpc("get_machine_status");
@@ -322,16 +567,26 @@
     if (error) {
       statusEl.textContent = "ERROR";
       statusEl.className = "status busy";
-      substatusEl.textContent = "Could not connect to the washing machine database.";
+
+      substatusEl.textContent =
+        "Could not connect to the washing machine database.";
+
       freeCard.classList.add("hidden");
       busyCard.classList.add("hidden");
+
       console.error(error);
       return;
     }
 
     currentMachine = data && data.length ? data[0] : null;
+
     renderMachine();
   }
+
+
+  // ============================================================
+  // RENDER MACHINE STATUS
+  // ============================================================
 
   function renderMachine() {
     if (countdownTimer) {
@@ -339,114 +594,230 @@
       countdownTimer = null;
     }
 
-    const active = currentMachine && currentMachine.end_time &&
-                   new Date(currentMachine.end_time) > new Date();
+    const active =
+      currentMachine &&
+      currentMachine.end_time &&
+      new Date(currentMachine.end_time) > new Date();
 
     if (!active) {
       statusEl.textContent = "FREI / FREE";
       statusEl.className = "status free";
-      substatusEl.textContent = "Die Waschmaschine ist verfügbar.";
+
+      substatusEl.textContent =
+        "Die Waschmaschine ist verfügbar.";
+
       busyCard.classList.add("hidden");
       freeCard.classList.remove("hidden");
-      setDefaultTimes();
+
+      updateDurationPreview();
+
       return;
     }
 
     statusEl.textContent = "BESETZT / OCCUPIED";
     statusEl.className = "status busy";
-    substatusEl.textContent = "Jemand benutzt die Waschmaschine.";
+
+    substatusEl.textContent =
+      "Jemand benutzt die Waschmaschine.";
+
     busyCard.classList.remove("hidden");
     freeCard.classList.add("hidden");
 
-    startTimeEl.textContent = formatDate(currentMachine.start_time);
-    endTimeEl.textContent = formatDate(currentMachine.end_time);
+    startTimeEl.textContent =
+      formatDate(currentMachine.start_time);
+
+    endTimeEl.textContent =
+      formatDate(currentMachine.end_time);
 
     updateCountdown();
-    countdownTimer = setInterval(updateCountdown, 1000);
+
+    countdownTimer = setInterval(
+      updateCountdown,
+      1000
+    );
   }
+
+
+  // ============================================================
+  // COUNTDOWN
+  // ============================================================
 
   function updateCountdown() {
     if (!currentMachine) return;
 
-    const remaining = new Date(currentMachine.end_time).getTime() - Date.now();
+    const remaining =
+      new Date(currentMachine.end_time).getTime() -
+      Date.now();
 
     if (remaining <= 0) {
       countdownEl.textContent = "Finished";
+
       clearInterval(countdownTimer);
+
       // Re-check the database so everybody sees FREE.
       setTimeout(loadMachine, 500);
+
       return;
     }
 
-    countdownEl.textContent = formatRemaining(remaining);
+    countdownEl.textContent =
+      formatRemaining(remaining);
   }
+
+
+  // ============================================================
+  // START WASH
+  // ============================================================
 
   startButton.addEventListener("click", async () => {
     clearMessages();
 
-    if (!startInput.value || !endInput.value) {
-      showError("Please enter both times.");
-      return;
+    let start;
+    let end;
+
+    // ----------------------------------------------------------
+    // Duration mode
+    // ----------------------------------------------------------
+
+    if (inputMode === "duration") {
+      start = new Date();
+
+      end = new Date(
+        start.getTime() +
+        selectedDuration * 60 * 1000
+      );
     }
 
-    const start = new Date(startInput.value);
-    const end = new Date(endInput.value);
-    const now = new Date();
+    // ----------------------------------------------------------
+    // Start/end mode
+    // ----------------------------------------------------------
 
-    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
-      showError("Please enter valid dates and times.");
+    else {
+      if (!startInput.value || !endInput.value) {
+        showError(
+          "Please enter both times."
+        );
+        return;
+      }
+
+      start = new Date(startInput.value);
+      end = new Date(endInput.value);
+    }
+
+    // ----------------------------------------------------------
+    // Validate
+    // ----------------------------------------------------------
+
+    if (
+      Number.isNaN(start.getTime()) ||
+      Number.isNaN(end.getTime())
+    ) {
+      showError(
+        "Please enter valid dates and times."
+      );
       return;
     }
 
     if (end <= start) {
-      showError("The finish time must be after the start time.");
+      showError(
+        "The finish time must be after the start time."
+      );
       return;
     }
 
-    // Allow a little clock skew, but don't allow old/absurd entries.
-    if (start.getTime() < now.getTime() - 10 * 60 * 1000) {
-      showError("The start time is too far in the past.");
+    const now = new Date();
+
+    // Allow a little clock skew, but don't allow old entries.
+    if (
+      start.getTime() <
+      now.getTime() - 10 * 60 * 1000
+    ) {
+      showError(
+        "The start time is too far in the past."
+      );
       return;
     }
 
-    if (end.getTime() > now.getTime() + 24 * 60 * 60 * 1000) {
-      showError("A wash can be scheduled for at most 24 hours.");
+    // Maximum 24 hours.
+    if (
+      end.getTime() >
+      now.getTime() + 24 * 60 * 60 * 1000
+    ) {
+      showError(
+        "A wash can be scheduled for at most 24 hours."
+      );
       return;
     }
+
+    // ----------------------------------------------------------
+    // Send to Supabase
+    // ----------------------------------------------------------
 
     startButton.disabled = true;
     startButton.textContent = "Starting…";
 
-    const { error } = await db.rpc("start_wash", {
-      p_start_time: start.toISOString(),
-      p_end_time: end.toISOString()
-    });
+    const { error } = await db.rpc(
+      "start_wash",
+      {
+        p_start_time: start.toISOString(),
+        p_end_time: end.toISOString()
+      }
+    );
 
     startButton.disabled = false;
-    startButton.textContent = "Waschen beginnen - Start washing";
+    startButton.textContent =
+      "Waschen beginnen - Start washing";
+
+    // ----------------------------------------------------------
+    // Handle error
+    // ----------------------------------------------------------
 
     if (error) {
-      showError(error.message.includes("already in use")
-        ? "Jemand hat gerade begonnen, die Maschine zu benutzen. Bitte überprüfen Sie den Status erneut."
-        : error.message);
+      showError(
+        error.message.includes("already in use")
+          ? "Jemand hat gerade begonnen, die Maschine zu benutzen. Bitte überprüfen Sie den Status erneut."
+          : error.message
+      );
+
       await loadMachine();
+
       return;
     }
 
-    showSuccess("Die Waschmaschine ist jetzt frei.");
+    // ----------------------------------------------------------
+    // Success
+    // ----------------------------------------------------------
+
+    showSuccess(
+      "Die Waschmaschine ist jetzt in Betrieb."
+    );
+
     await loadMachine();
   });
 
+
+  // ============================================================
+  // FINISH WASH
+  // ============================================================
+
   finishButton.addEventListener("click", async () => {
-    if (!confirm("Ist die Waschmachine frei?\nAre you sure the washing machine is free?")) return;
+    if (
+      !confirm(
+        "Ist die Waschmaschine frei?\nAre you sure the washing machine is free?"
+      )
+    ) {
+      return;
+    }
 
     finishButton.disabled = true;
     finishButton.textContent = "Updating…";
 
-    const { error } = await db.rpc("finish_wash");
+    const { error } =
+      await db.rpc("finish_wash");
 
     finishButton.disabled = false;
-    finishButton.textContent = "Ich bin fertig - Waschmachine ist frei";
+    finishButton.textContent =
+      "Ich bin fertig - Waschmachine ist frei";
 
     if (error) {
       showError(error.message);
@@ -456,10 +827,27 @@
     await loadMachine();
   });
 
-  // Refresh shared state every 30 seconds.
-  refreshTimer = setInterval(loadMachine, 30000);
 
+  // ============================================================
+  // REFRESH
+  // ============================================================
+
+  // Refresh shared state every 30 seconds.
+  refreshTimer = setInterval(
+    loadMachine,
+    30000
+  );
+
+
+  // ============================================================
+  // INITIAL LOAD
+  // ============================================================
+
+  updateDurationPreview();
   loadMachine();
+
 </script>
+
 </body>
 </html>
+
