@@ -190,12 +190,22 @@
       overflow-y: auto;
       overflow-x: hidden;
       scroll-snap-type: y mandatory;
-      scrollbar-width: none;
+      scrollbar-width: thin;
+      scrollbar-color: #aaa transparent;
       padding: 60px 0;
     }
     
     .custom-duration-scroll::-webkit-scrollbar {
-      display: none;
+      width: 2px;
+    }
+    
+    .custom-duration-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .custom-duration-scroll::-webkit-scrollbar-thumb {
+      background: #aaa;
+      border-radius: 3px;
     }
     
     .custom-minute {
@@ -482,41 +492,6 @@
           </div>
         </div>
 
-        const customScroll = document.getElementById("customDurationScroll");
-        const customMinutes = document.querySelectorAll(".custom-minute");
-        
-        customMinutes.forEach(button => {
-          button.addEventListener("click", () => {
-            const minutes = Number(button.dataset.minutes);
-        
-            selectedDuration = minutes;
-        
-            customMinutes.forEach(b => b.classList.remove("selected"));
-            button.classList.add("selected");
-        
-            button.scrollIntoView({
-              behavior: "smooth",
-              block: "center"
-            });
-        
-            document.querySelectorAll(".duration-option").forEach(b => {
-              b.classList.remove("active");
-            });
-        
-            updateDurationPreview();
-          });
-        });
-
-        const initialMinute = document.querySelector(
-          '.custom-minute[data-minutes="60"]'
-        );
-        
-        if (initialMinute) {
-          initialMinute.scrollIntoView({
-            block: "center"
-          });
-        }
-
         <div class="preview" id="durationPreview">
           Starts now / Jetzt starten<br>
           <strong id="durationEndPreview"></strong>
@@ -566,6 +541,41 @@
         inline: "center"
       });
     }
+  }
+
+  const customScroll = document.getElementById("customDurationScroll");
+  const customMinutes = document.querySelectorAll(".custom-minute");
+  
+  customMinutes.forEach(button => {
+    button.addEventListener("click", () => {
+      const minutes = Number(button.dataset.minutes);
+  
+      selectedDuration = minutes;
+  
+      customMinutes.forEach(b => b.classList.remove("selected"));
+      button.classList.add("selected");
+  
+      button.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+  
+      document.querySelectorAll(".duration-option").forEach(b => {
+        b.classList.remove("active");
+      });
+  
+      updateDurationPreview();
+    });
+  });
+  
+  const initialMinute = document.querySelector(
+    '.custom-minute[data-minutes="60"]'
+  );
+  
+  if (initialMinute) {
+    initialMinute.scrollIntoView({
+      block: "center"
+    });
   }
 
   function setupFreeControls() {
