@@ -175,76 +175,76 @@
       font-size: 14px;
       margin-bottom: 5px;
     }
-
+    
     .custom-duration-picker {
       position: relative;
-      height: 55px;
+      height: 150px;
       overflow: hidden;
       margin-bottom: 15px;
       border-radius: 10px;
       background: #f1f1f1;
     }
-
+    
+    .custom-duration-scroll {
+      height: 150px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none;
+      padding: 60px 0;
+    }
+    
+    .custom-duration-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .custom-minute {
+      display: block;
+      width: 100%;
+      height: 30px;
+      padding: 4px;
+      border: none;
+      background: transparent;
+      color: #999;
+      font-size: 16px;
+      scroll-snap-align: center;
+      transition: all 0.15s;
+    }
+    
+    .custom-minute.selected {
+      background: #222;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+    
     .custom-duration-picker::before,
     .custom-duration-picker::after {
       content: "";
       position: absolute;
       left: 0;
       right: 0;
-      height: 18px;
+      height: 55px;
       z-index: 2;
       pointer-events: none;
     }
-
+    
     .custom-duration-picker::before {
       top: 0;
       background: linear-gradient(
         to bottom,
         #f1f1f1,
-        rgba(241,241,241,0)
+        rgba(241, 241, 241, 0)
       );
     }
-
+    
     .custom-duration-picker::after {
       bottom: 0;
       background: linear-gradient(
         to top,
         #f1f1f1,
-        rgba(241,241,241,0)
+        rgba(241, 241, 241, 0)
       );
-    }
-
-    .custom-duration-scroll {
-      height: 55px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0 20px;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-    }
-
-    .custom-duration-scroll::-webkit-scrollbar {
-      display: none;
-    }
-
-    .custom-minute {
-      flex: 0 0 auto;
-      width: 65px;
-      padding: 9px 4px;
-      border-radius: 8px;
-      background: transparent;
-      color: #777;
-      font-size: 16px;
-      scroll-snap-align: center;
-    }
-
-    .custom-minute.selected {
-      background: #222;
-      color: white;
-      font-weight: bold;
     }
 
     .preview {
@@ -475,12 +475,47 @@
                 <button
                   class="custom-minute ${minutes === 60 ? "selected" : ""}"
                   data-minutes="${minutes}">
-                  ${minutes}
+                  ${minutes} min
                 </button>
               `;
             }).join("")}
           </div>
         </div>
+
+        const customScroll = document.getElementById("customDurationScroll");
+        const customMinutes = document.querySelectorAll(".custom-minute");
+        
+        customMinutes.forEach(button => {
+          button.addEventListener("click", () => {
+            const minutes = Number(button.dataset.minutes);
+        
+            selectedDuration = minutes;
+        
+            customMinutes.forEach(b => b.classList.remove("selected"));
+            button.classList.add("selected");
+        
+            button.scrollIntoView({
+              behavior: "smooth",
+              block: "center"
+            });
+        
+            document.querySelectorAll(".duration-option").forEach(b => {
+              b.classList.remove("active");
+            });
+        
+            updateDurationPreview();
+          });
+        });
+
+        const initialMinute = document.querySelector(
+          '.custom-minute[data-minutes="60"]'
+        );
+        
+        if (initialMinute) {
+          initialMinute.scrollIntoView({
+            block: "center"
+          });
+        }
 
         <div class="preview" id="durationPreview">
           Starts now / Jetzt starten<br>
