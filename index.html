@@ -69,10 +69,23 @@
     }
 
     .info {
-      text-align: center;
       margin-bottom: 20px;
       font-size: 17px;
-      line-height: 1.6;
+      line-height: 1.8;
+    }
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .info-label {
+      font-weight: bold;
+    }
+    
+    .info-time {
+      text-align: right;
     }
 
     .countdown {
@@ -370,21 +383,24 @@
         BESETZT / OCCUPIED
       </div>
     `;
-    
+
     app.innerHTML = `
       <div class="info">
-        <strong>Anfang / Start</strong><br>
-        ${formatDate(start)}
-        <br><br>
-
-        <strong>Ende / Finish</strong><br>
-        ${formatDate(end)}
+        <div class="info-row">
+          <span class="info-label">Anfang / Start</span>
+          <span class="info-time">${formatDate(start)}</span>
+        </div>
+    
+        <div class="info-row">
+          <span class="info-label">Ende / Finish</span>
+          <span class="info-time">${formatDate(end)}</span>
+        </div>
       </div>
-
+    
       <div class="countdown" id="countdown">
         ${formatCountdown(end - Date.now())}
       </div>
-
+    
       <button class="finish-button" id="finishButton">
         Ich bin fertig – Waschmaschine ist frei<br>
         I'm done – washing machine is free
