@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -114,8 +115,8 @@
 
     .tab {
       width: auto;
-      padding: 8px 14px;
-      font-size: 14px;
+      padding: 7px 13px;
+      font-size: 13px;
       border-radius: 8px;
       background: #e5e5e5;
       color: #444;
@@ -154,21 +155,93 @@
       color: white;
     }
 
-    .custom-duration {
+    /* Custom duration picker */
+    .custom-picker-label {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .custom-duration-picker {
+      position: relative;
+      height: 55px;
+      overflow: hidden;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      background: #f1f1f1;
+    }
+
+    .custom-duration-picker::before,
+    .custom-duration-picker::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 18px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .custom-duration-picker::before {
+      top: 0;
+      background: linear-gradient(
+        to bottom,
+        #f1f1f1,
+        rgba(241,241,241,0)
+      );
+    }
+
+    .custom-duration-picker::after {
+      bottom: 0;
+      background: linear-gradient(
+        to top,
+        #f1f1f1,
+        rgba(241,241,241,0)
+      );
+    }
+
+    .custom-duration-scroll {
+      height: 55px;
+      overflow-x: auto;
+      overflow-y: hidden;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      padding: 0 20px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .custom-duration-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .custom-minute {
+      flex: 0 0 auto;
+      width: 65px;
+      padding: 9px 4px;
+      border-radius: 8px;
+      background: transparent;
+      color: #777;
+      font-size: 16px;
+      scroll-snap-align: center;
+    }
+
+    .custom-minute.selected {
+      background: #222;
+      color: white;
+      font-weight: bold;
+    }
+
+    .preview {
+      background: #f1f1f1;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
       margin-bottom: 15px;
-    }
-
-    .custom-duration input {
-      flex: 1;
-      margin-bottom: 0;
-    }
-
-    .custom-duration span {
-      white-space: nowrap;
-      color: #555;
+      color: #444;
+      line-height: 1.5;
     }
 
     label {
@@ -186,16 +259,6 @@
       margin-bottom: 15px;
     }
 
-    .preview {
-      background: #f1f1f1;
-      border-radius: 10px;
-      padding: 12px;
-      text-align: center;
-      margin-bottom: 15px;
-      color: #444;
-      line-height: 1.5;
-    }
-
     .error {
       color: #c62828;
       text-align: center;
@@ -208,6 +271,7 @@
       color: #666;
     }
   </style>
+
 </head>
 
 <body>
@@ -236,7 +300,6 @@
   const app = document.getElementById("app");
 
   let selectedDuration = 60;
-  let customDuration = false;
   let countdownInterval = null;
 
   function formatDate(date) {
@@ -305,8 +368,7 @@
 
     app.innerHTML = `
       <div class="status busy">
-        BUSY<br>
-        <span style="font-size:22px;">BELEGT</span>
+        BESETZT / OCCUPIED
       </div>
 
       <div class="info">
@@ -353,37 +415,52 @@
 
     app.innerHTML = `
       <div class="status free">
-        FREE<br>
-        <span style="font-size:22px;">FREI</span>
+        FREI / FREE
       </div>
 
       <div class="tabs">
         <button class="tab active" id="durationTab">
-          Duration
+          Dauer / Duration
         </button>
 
         <button class="tab" id="exactTab">
-          Start & End
+          Start / Ende
         </button>
       </div>
 
       <div id="durationContent" class="tab-content active">
 
         <div class="duration-options">
-          <button class="duration-option" data-duration="40">40 min</button>
-          <button class="duration-option active" data-duration="60">60 min</button>
-          <button class="duration-option" data-duration="90">90 min</button>
+          <button class="duration-option" data-duration="40">
+            40 min
+          </button>
+
+          <button class="duration-option active" data-duration="60">
+            60 min
+          </button>
+
+          <button class="duration-option" data-duration="90">
+            90 min
+          </button>
         </div>
 
-        <div class="custom-duration">
-          <input
-            type="number"
-            id="customMinutes"
-            min="1"
-            max="1440"
-            placeholder="Custom"
-          >
-          <span>minutes</span>
+        <div class="custom-picker-label">
+          Custom duration / Eigene Dauer
+        </div>
+
+        <div class="custom-duration-picker">
+          <div class="custom-duration-scroll" id="customDurationScroll">
+            ${Array.from({ length: 180 }, (_, i) => {
+              const minutes = i + 1;
+              return `
+                <button
+                  class="custom-minute ${minutes === 60 ? "selected" : ""}"
+                  data-minutes="${minutes}">
+                  ${minutes}
+                </button>
+              `;
+            }).join("")}
+          </div>
         </div>
 
         <div class="preview" id="durationPreview">
@@ -422,6 +499,19 @@
 
     setupFreeControls();
     updateDurationPreview();
+
+    // Scroll custom picker to 60 minutes initially
+    const selected = document.querySelector(
+      '.custom-minute[data-minutes="60"]'
+    );
+
+    if (selected) {
+      selected.scrollIntoView({
+        behavior: "instant",
+        block: "nearest",
+        inline: "center"
+      });
+    }
   }
 
   function setupFreeControls() {
@@ -449,10 +539,10 @@
       setDefaultExactTimes();
     });
 
+    // Preset durations
     document.querySelectorAll(".duration-option").forEach(button => {
       button.addEventListener("click", () => {
         selectedDuration = Number(button.dataset.duration);
-        customDuration = false;
 
         document.querySelectorAll(".duration-option").forEach(b => {
           b.classList.remove("active");
@@ -460,31 +550,31 @@
 
         button.classList.add("active");
 
-        document.getElementById("customMinutes").value = "";
+        document.querySelectorAll(".custom-minute").forEach(b => {
+          b.classList.remove("selected");
+        });
 
         updateDurationPreview();
       });
     });
 
-    document.getElementById("customMinutes").addEventListener("input", () => {
-      const value = Number(document.getElementById("customMinutes").value);
+    // Custom duration picker
+    document.querySelectorAll(".custom-minute").forEach(button => {
+      button.addEventListener("click", () => {
+        selectedDuration = Number(button.dataset.minutes);
 
-      if (value > 0) {
-        customDuration = true;
+        document.querySelectorAll(".custom-minute").forEach(b => {
+          b.classList.remove("selected");
+        });
+
+        button.classList.add("selected");
 
         document.querySelectorAll(".duration-option").forEach(b => {
           b.classList.remove("active");
         });
 
-        selectedDuration = value;
-      } else {
-        customDuration = false;
-        selectedDuration = 60;
-
-        document.querySelector('[data-duration="60"]').classList.add("active");
-      }
-
-      updateDurationPreview();
+        updateDurationPreview();
+      });
     });
 
     document.getElementById("startDurationButton")
@@ -496,6 +586,7 @@
 
   function updateDurationPreview() {
     const now = new Date();
+
     const end = new Date(
       now.getTime() + selectedDuration * 60 * 1000
     );
@@ -529,19 +620,16 @@
     const errorMessage = document.getElementById("errorMessage");
     errorMessage.textContent = "";
 
-    const minutes = Number(
-      customDuration
-        ? document.getElementById("customMinutes").value
-        : selectedDuration
-    );
+    const minutes = selectedDuration;
 
-    if (!minutes || minutes <= 0 || minutes > 1440) {
+    if (!minutes || minutes <= 0 || minutes > 180) {
       errorMessage.textContent =
-        "Please enter a duration between 1 and 1440 minutes.";
+        "Please select a duration between 1 and 180 minutes.";
       return;
     }
 
     const start = new Date();
+
     const end = new Date(
       start.getTime() + minutes * 60 * 1000
     );
